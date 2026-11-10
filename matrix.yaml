@@ -1,0 +1,19 @@
+# Systematic benchmark matrix for RTX 5060 Ti 8GB
+runs: 5
+num_predict: 256
+contexts: [4096, 8192]
+models:
+  - name: qwen3:1.7b
+    quant: Q4_K_M
+    backend: ollama
+  - name: qwen3:4b
+    quant: Q4_K_M
+    backend: ollama
+  - name: qwen3:4b
+    quant: Q3_K_M
+    backend: llama.cpp
+    speculative: dflash
+prompts:
+  - "Explica en detalle qué es speculative decoding y cuándo acelera la inferencia local."
+  - "Escribe una función Python que calcule Fibonacci de forma iterativa y explica su complejidad."
+  - "Resume en 5 puntos los trade-offs entre cuantización Q3 y Q4 para LLMs en 8GB."

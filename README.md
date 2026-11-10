@@ -139,8 +139,22 @@ Environment variables:
 
 ## 5. Benchmarking
 
+Single config:
+
 ```powershell
 python benchmark.py --model qwen3:1.7b --runs 5 --num-predict 256
+```
+
+Systematic matrix:
+
+```powershell
+python benchmark_matrix.py --config matrix.yaml --runs 5
+```
+
+Quality gate:
+
+```powershell
+python quality_eval.py --model qwen3:4b --baseline-score 0.85
 ```
 
 Output (JSON):
