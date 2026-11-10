@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>edge-qwen-slo dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: system-ui, sans-serif; margin: 24px; background: #0b0f14; color: #e6edf3; }
+    .card { background: #111827; border: 1px solid #1f2937; border-radius: 12px; padding: 16px; margin-bottom: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+    .metric { font-size: 28px; font-weight: 700; }
+    canvas { max-height: 320px; }
+  </style>
+</head>
+<body>
+  <h1>edge-qwen-slo · dashboard</h1>
+  <div class="grid">
+    <div class="card"><div>Requests</div><div class="metric" id="count">-</div></div>
+    <div class="card"><div>Median tok/s</div><div class="metric" id="median">-</div></div>
+    <div class="card"><div>SLO pass rate</div><div class="metric" id="slo">-</div></div>
+    <div class="card"><div>Last tok/s</div><div class="metric" id="last">-</div></div>
+  </div>
+  <div class="card"><canvas id="chart"></canvas></div>
+  <script>
+    const ctx = document.getElementById('chart');
+    const chart = new Chart(ctx, {
+      type: 'line',
+      data: { labels: [], datasets: [{ label: 'tok/s', data: [], borderColor: '#22c55e', tension: 0.2 }] },
+      options: { scales: { y: { beginAtZero: true } } }
+    });
+    async function refresh() {
+      const r = await fetch('/api/stats');
+      const d = await r.json();
+      document.getElementById('count').textContent = d.count ?? '-';
+      document.getElementById('median').textContent = d.median_toks ?? '-';
+      document.getElementById('slo').textContent = d.slo_pass_rate != null ? (d.slo_pass_rate*100).toFixed(1)+'%' : '-';
+      document.getElementById('last').textContent = d.last?.toks ?? '-';
+      if (d.last) {
+        chart.data.labels.push(new Date().toLocaleTimeString());
+        chart.data.datasets[0].data.push(d.last.toks);
+        if (chart.data.labels.length > 50) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
+        chart.update();
+      }
+    }
+    setInterval(refresh, 2000);
+    refresh();
+  </script>
+</body>
+</html>

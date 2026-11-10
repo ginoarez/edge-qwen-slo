@@ -1,0 +1,22 @@
+slo:
+  min_decode_toks: 100
+  max_ttft_s: 0.5
+  max_vram_gb: 7.5
+  quality_drop_max_points: 3
+
+models:
+  - name: qwen3:1.7b
+    role: simple
+    expected_toks: 156
+  - name: qwen3:4b
+    role: quality
+    expected_toks: 90
+  - name: qwen3:4b + dflash
+    role: quality_and_speed
+    expected_toks: 140
+
+benchmark:
+  runs: 5
+  prompt_tokens_target: 512
+  num_predict: 256
+  temperature: 0.0
