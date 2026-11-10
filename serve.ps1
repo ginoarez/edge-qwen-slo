@@ -1,4 +1,4 @@
-# Servir Qwen3 4B con speculative decoding (DFlash) en RTX 5060 Ti 8GB
+# Servir Qwen3 4B con speculative decoding (DFlash) (hardware-agnostic)
 # Requiere llama.cpp compilado con CUDA.
 
 $Target = "Qwen3-4B-Q4_K_M.gguf"

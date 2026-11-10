@@ -3,7 +3,7 @@
 ![ci](https://img.shields.io/github/actions/workflow/status/ginoarez/edge-qwen-slo/ci.yml?branch=main)
 ![license](https://img.shields.io/github/license/ginoarez/edge-qwen-slo)
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
-![gpu](https://img.shields.io/badge/GPU-RTX%205060%20Ti%208GB-76B900)
+![vram](https://img.shields.io/badge/VRAM-2--24GB-blue)
 
 **Hardware-agnostic LLM edge lab.**  
 Goal: find the best (model + quantization + runtime + speculative decoding + adaptation) for **any** VRAM budget, from 2 GB to 24 GB+, with reproducible benchmarks and quality gates.
@@ -19,7 +19,7 @@ Inspired by **Agentic ESOpt** (gradient-free, inference-level-memory adaptation)
 
 | Item | Value |
 |---|---|
-| GPU | NVIDIA RTX 5060 Ti 8 GB (GB206, 448 GB/s) |
+| Reference profile | Consumer GPU, 8 GB VRAM (example) |
 | Usable VRAM | ~8 GB (model + KV cache + runtime overhead) |
 | SLO (decode) | **≥ 100 tok/s** (median of 5 runs) |
 | SLO (TTFT) | **≤ 500 ms** |
@@ -30,7 +30,7 @@ Inspired by **Agentic ESOpt** (gradient-free, inference-level-memory adaptation)
 
 ## 2. Model matrix (8 GB)
 
-Throughput numbers are measured with Ollama Q4_K_M on RTX 5060-class 8 GB GPUs (see `results/README.md`).
+Throughput numbers are examples measured on 8 GB-class GPUs (see `results/README.md`). Replace with your own hardware measurements.
 
 | Model | Quant | Size | tok/s | Role |
 |---|---|---:|---:|---|

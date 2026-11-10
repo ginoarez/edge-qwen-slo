@@ -1,4 +1,4 @@
-# Systematic benchmark matrix for RTX 5060 Ti 8GB
+# Systematic benchmark matrix for edge LLM inference (hardware-agnostic)
 runs: 5
 num_predict: 256
 contexts: [4096, 8192]

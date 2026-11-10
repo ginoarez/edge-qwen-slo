@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Benchmark reproducible de tok/s para Ollama (RTX 5060 Ti 8GB)."""
+"""Benchmark reproducible de tok/s para Ollama (hardware-agnostic)."""
 
 import argparse
 import json
