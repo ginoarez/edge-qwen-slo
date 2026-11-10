@@ -5,8 +5,10 @@
 ![python](https://img.shields.io/badge/python-3.11%2B-blue)
 ![gpu](https://img.shields.io/badge/GPU-RTX%205060%20Ti%208GB-76B900)
 
-**OpenAI-compatible LLM gateway + SLO toolkit for consumer GPUs (8 GB VRAM).**  
-Target: serve a *good* Qwen-class model at **≥ 100 decode tok/s** on an NVIDIA RTX 5060 Ti 8 GB, with reproducible benchmarks, speculative decoding, Prometheus metrics, and a latency/throughput dashboard.
+**Hardware-agnostic LLM edge lab.**  
+Goal: find the best (model + quantization + runtime + speculative decoding + adaptation) for **any** VRAM budget, from 2 GB to 24 GB+, with reproducible benchmarks and quality gates.
+
+Inspired by **Agentic ESOpt** (gradient-free, inference-level-memory adaptation), this project also explores recovering quality after aggressive quantization.
 
 > This project is intentionally different from training-focused toolkits (e.g. Soup).  
 > Focus here is **low-latency edge inference**: quantization, speculative decoding, KV-cache discipline, and observability.
@@ -208,26 +210,24 @@ Before shipping a new quantization or speculative config:
 
 ```
 edge-qwen-slo/
-├── .github/workflows/ci.yml      # GitHub Actions (pytest)
-├── app/
-│   ├── __init__.py
-│   ├── main.py                   # FastAPI gateway
-│   ├── metrics.py                # Prometheus metrics
-│   └── vram.py                   # nvidia-smi sampler
-├── static/
-│   └── dashboard.html            # Live dashboard
+├── .github/workflows/ci.yml
+├── app/                          # FastAPI gateway + metrics
+├── hardware/                     # Hardware profiler
+├── models/                       # Model catalog
+├── adaptation/                   # ES adaptation (Agentic ESOpt inspired)
+├── recommender/                  # Config recommender by VRAM
+├── static/                       # Dashboard
 ├── tests/
-│   ├── test_api.py
-│   └── test_benchmark.py
 ├── docs/
-│   └── architecture.md
 ├── results/
-│   └── README.md                 # Reproducible benchmark table
 ├── benchmark.py
-├── config.yaml                   # SLO configuration
+├── benchmark_matrix.py
+├── quality_eval.py
+├── matrix.yaml
+├── config.yaml
 ├── conftest.py
 ├── pyproject.toml
-├── serve.ps1                     # llama.cpp + speculative decoding
+├── serve.ps1
 ├── Dockerfile
 ├── requirements.txt
 ├── LICENSE

@@ -1,0 +1,1 @@
+"""Quality adaptation via evolution strategies (inspired by Agentic ESOpt)."""
