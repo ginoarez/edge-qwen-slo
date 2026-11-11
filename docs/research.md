@@ -54,6 +54,23 @@ This is **not** about matching raw tok/s of a 5090. It is about **maximizing use
 - CPU RAM can hold overflow, but latency degrades sharply.
 - Useful for models slightly above VRAM budget, not for interactive SLO.
 
+### 2.7 Disk streaming & MoE expert offloading (kimi-k3-in-c)
+
+From `kimi-k3-in-c`: a 2.78T-param model runs in **8.24 GB RAM** by never keeping the 1.45 TB of routed experts resident.
+
+Key techniques:
+- **MoE with expert streaming**: only active experts are loaded; rest streamed from disk on demand.
+- **MXFP4 quantization**: experts stored at ~0.5 byte/param.
+- **KDA (Kimi Delta Attention)**: recurrent state with fixed size (memory never grows with context).
+- **MLA (Multi-Head Latent Attention)**: one latent instead of 96 heads.
+- **Trunk packing**: dense layers packed into one file, streamed with LRU cache.
+- **Ultra-low-memory mode**: stream exact embedding rows, reuse one state slot.
+- **Invariant**: byte-identical output across all memory budgets (8 GB → 224 GB).
+
+**Implication**: this is the ultimate memory reduction—model size becomes a *dial*, not a floor. A 27B+ model can run in <4 GB if experts stream from fast storage.
+
+Trade-off: latency dominated by I/O (41–71% of wall clock). Best for non-interactive or with fast NVMe.
+
 ---
 
 ## 3. Proposed Solution Pipeline
@@ -109,6 +126,11 @@ Bonsai 2 27B retains 98.2% accuracy at 5.9 GB. A 9B ternary model in 2 GB with E
 ### Phase D: Recommender
 - Given VRAM + objective, recommend best config.
 - Validate with real benchmarks.
+
+### Phase E: Disk streaming (kimi-k3-in-c inspired)
+- Prototype MoE expert streaming from disk with LRU cache.
+- Measure I/O share of wall clock and tok/s at 4/8 GB.
+- Compare against ternary in-memory baseline.
 
 ---
 
