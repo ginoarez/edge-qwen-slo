@@ -54,6 +54,22 @@ This is **not** about matching raw tok/s of a 5090. It is about **maximizing use
 - CPU RAM can hold overflow, but latency degrades sharply.
 - Useful for models slightly above VRAM budget, not for interactive SLO.
 
+### 2.8 KV cache quantization (KIVI / MiniKV)
+
+- KIVI: 2-bit per-channel key + per-token value quantization.
+- MiniKV: 2-bit layer-wise KV compression.
+- Can reduce KV memory by 8x with minimal quality loss on long context.
+
+**Implication**: enables longer contexts in <4 GB.
+
+### 2.9 Prompt / context compression (LLMLingua)
+
+- Drop low-information tokens using a small model.
+- Up to 20x compression on reasoning tasks; 4-10x typical.
+- Reduces prompt processing time and KV cache size.
+
+**Implication**: cheaper long-context inference without model changes.
+
 ### 2.7 Disk streaming & MoE expert offloading (kimi-k3-in-c)
 
 From `kimi-k3-in-c`: a 2.78T-param model runs in **8.24 GB RAM** by never keeping the 1.45 TB of routed experts resident.
