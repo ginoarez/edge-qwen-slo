@@ -8,12 +8,12 @@ import time
 import urllib.request
 
 
-def run_once(model: str, prompt: str, num_predict: int, host: str) -> dict:
+def run_once(model: str, prompt: str, num_predict: int, host: str, num_ctx: int = 4096) -> dict:
     payload = {
         "model": model,
         "prompt": prompt,
         "stream": False,
-        "options": {"num_predict": num_predict, "temperature": 0.0},
+        "options": {"num_predict": num_predict, "num_ctx": num_ctx, "temperature": 0.0},
     }
     data = json.dumps(payload).encode()
     req = urllib.request.Request(f"{host}/api/generate", data=data, headers={"Content-Type": "application/json"})
@@ -43,10 +43,11 @@ def main():
     ap.add_argument("--host", default="http://127.0.0.1:11434")
     ap.add_argument("--runs", type=int, default=5)
     ap.add_argument("--num-predict", type=int, default=256)
+    ap.add_argument("--num-ctx", type=int, default=4096)
     ap.add_argument("--prompt", default="Explica en detalle qué es speculative decoding y cuándo acelera la inferencia local.")
     args = ap.parse_args()
 
-    results = [run_once(args.model, args.prompt, args.num_predict, args.host) for _ in range(args.runs)]
+    results = [run_once(args.model, args.prompt, args.num_predict, args.host, args.num_ctx) for _ in range(args.runs)]
     summary = summarize(args.model, args.runs, results)
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 
