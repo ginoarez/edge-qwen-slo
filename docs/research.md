@@ -62,6 +62,18 @@ This is **not** about matching raw tok/s of a 5090. It is about **maximizing use
 
 **Implication**: enables longer contexts in <4 GB.
 
+### 2.10 Exact layer streaming (Soup)
+
+Soup fine-tunes an 8B model on a 4 GB GPU by streaming the frozen base from host RAM **one decoder layer at a time**, achieving bit-exact results vs resident.
+
+Key findings:
+- VRAM peak: 3.32 GB for Llama-3.1-8B NF4 (pre-repair), 2.40 GB post-repair.
+- Host-to-device transfer is **not** the bottleneck (only 1.4% speedup if removed).
+- Largest cost: per-layer NF4 dequantization (9.8%).
+- Correctness: forward + backward verified separately (bit-exact).
+
+**Implication for inference**: the same technique applies—stream decoder layers from CPU RAM/disk to GPU, keeping only one layer + activations in VRAM. This turns VRAM requirement from "full model" to "one layer", enabling 8B+ models in <4 GB (with enough host RAM and bandwidth).
+
 ### 2.9 Prompt / context compression (LLMLingua)
 
 - Drop low-information tokens using a small model.
