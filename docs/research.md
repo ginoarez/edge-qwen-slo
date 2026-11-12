@@ -82,6 +82,15 @@ Key findings:
 
 **Implication**: cheaper long-context inference without model changes.
 
+### 2.11 SSMs / Mamba / RWKV (constant-memory architectures)
+
+- Transformers: KV cache grows linearly with context (16 GB for 8B @ 128K).
+- SSMs (Mamba-3, RWKV-7): recurrent state of few MB, O(N) compute, constant memory.
+- Mamba-3 1.5B beats Llama-3.2-1B by +2.2 pp on downstream tasks.
+- Hybrid SSM+Attention (Jamba, Qwen3.8) keeps few full-attention layers for retrieval.
+
+**Implication**: for long-context and <4 GB, SSM/hybrid architectures are superior to dense transformers. Combine with ternary quantization for extreme density.
+
 ### 2.7 Disk streaming & MoE expert offloading (kimi-k3-in-c)
 
 From `kimi-k3-in-c`: a 2.78T-param model runs in **8.24 GB RAM** by never keeping the 1.45 TB of routed experts resident.

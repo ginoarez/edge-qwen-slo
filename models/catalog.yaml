@@ -98,3 +98,12 @@ models:
     quant: ternary
     quality_score: 92
     notes: "5.9 GB weights; retains 98.2% of 27B accuracy."
+
+  - id: mamba-3-1.5b
+    family: mamba
+    params_b: 1.5
+    active_b: 1.5
+    min_vram_gb: 2
+    quant: Q4_K_M
+    quality_score: 70
+    notes: "SSM; constant memory; beats Llama-3.2-1B."
