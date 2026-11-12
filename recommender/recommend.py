@@ -4,6 +4,8 @@ import os
 
 import yaml
 
+from .architecture import select_architecture
+
 
 def load_catalog(path="models/catalog.yaml"):
     with open(path, "r", encoding="utf-8") as f:
@@ -22,6 +24,7 @@ def recommend(vram_gb: float, objective: str = "quality"):
         candidates.sort(key=lambda m: (-m["quality_score"], m["active_b"]))
     best = candidates[0]
     speculative = "dflash" if best["min_vram_gb"] >= 4 else "none"
+    arch = select_architecture(vram_gb, 4096, objective)
     return {
         "model": best["id"],
         "quant": best["quant"],
@@ -29,6 +32,7 @@ def recommend(vram_gb: float, objective: str = "quality"):
         "active_b": best["active_b"],
         "quality_score": best["quality_score"],
         "speculative": speculative,
+        "architecture": arch,
         "objective": objective,
     }
 
